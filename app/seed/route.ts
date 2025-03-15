@@ -101,8 +101,37 @@ async function seedRevenue() {
   return insertedRevenue;
 }
 
+async function dropTables() {
+  await sql`DROP TABLE IF EXISTS users, invoices, customers, revenue;`;
+}
+
+// check if tables exist (users, invoices, customers, revenue)
+async function checkTables() {
+  const tables = await sql`
+    SELECT table_name 
+    FROM information_schema.tables 
+    WHERE table_name IN ('users', 'invoices', 'customers', 'revenue');
+  `;
+
+  return tables;
+}
+
 export async function GET() {
   try {
+    // drop tables if you want to force a fresh start
+    // const result = await sql.begin((sql) => [
+    //   dropTables
+    // ]);
+  
+    // return Response.json({ message: 'Database table dropped successfully' });
+
+    // check if tables exist already
+    const existingTables = await checkTables();
+    if (existingTables.length > 0) {
+      return Response.json({ message: 'Some database tables (users, invoices, customers, revenue) already exist' });
+    }
+
+    // if no tables exist yet, seed the database
     const result = await sql.begin((sql) => [
       seedUsers(),
       seedCustomers(),
