@@ -101,9 +101,10 @@ async function seedRevenue() {
   return insertedRevenue;
 }
 
-async function dropTables() {
-  await sql`DROP TABLE IF EXISTS users, invoices, customers, revenue;`;
-}
+// drop tables if you want to force a fresh start
+// async function dropTables() {
+//   await sql`DROP TABLE IF EXISTS users, invoices, customers, revenue;`;
+// }
 
 // check if tables exist (users, invoices, customers, revenue)
 async function checkTables() {
@@ -132,12 +133,14 @@ export async function GET() {
     }
 
     // if no tables exist yet, seed the database
-    const result = await sql.begin((sql) => [
+    const result = await sql.begin(() => [
       seedUsers(),
       seedCustomers(),
       seedInvoices(),
       seedRevenue(),
     ]);
+
+    console.log("These tables already exist: ", result);
 
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {
