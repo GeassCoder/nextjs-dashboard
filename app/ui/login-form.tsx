@@ -67,7 +67,8 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        {/* <input type="hidden" name="redirectTo" value={callbackUrl} /> */}
+        {/* TODO: this line is probably not used */}
+        <input type="hidden" name="redirectTo" value={callbackUrl} />
         <Button className="mt-4 w-full" aria-disabled={isPending}>
           Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </Button>
